@@ -53,33 +53,27 @@ var DataModel = {
 //
 
 var generateSelectUI = function(selectModel) {
-  var ui = '<select value="' + selectModel.values[selectModel.defaultValueIndex] + '">\n';
+  var render = function() {
+    var options = [];
     selectModel.values.forEach(function(val) {
-      ui += '<option value="' + val + '">' + val + "</option>\n";
+      options.push(React.createElement("option", { value: val}, val));
     });
-  ui += "</select>";
-  console.log(ui);
-  return ui;
+    return React.createElement("select", { value: selectModel.values[selectModel.defaultValueIndex] }, options);
+  };
+  return React.createClass({
+    render: render
+  });
 };
 
 //
-// React
+// Main
 //
 
-var App = React.createClass({
-  render: function() {
-    var studentAgeRangeSelect = generateSelectUI(StudentAgeRange);
-    return React.DOM.p(null, studentAgeRangeSelect);
-  }
-});
 
-var AppFactory = React.createFactory(App);
+React.render(
+  React.createElement(generateSelectUI(StudentAgeRange)),
+  document.getElementById('container')
+);
 
-setInterval(function() {
-  React.render(
-    AppFactory(),
-    document.getElementById('container')
-  );
-}, 1000);
 
 
