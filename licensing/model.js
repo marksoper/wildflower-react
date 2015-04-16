@@ -25,6 +25,7 @@ var StudentAgeRange = {
     "9-12",
     "12-15"
   ],
+  defaultValueIndex: 0,
   inputType: "select"
 };
 
@@ -40,4 +41,16 @@ var DataModel = {
   StudentAgeRange: StudentAgeRange,
   NumberOfStudents: NumberOfStudents
 };
+
+
+var generateSelectUI = function(selectModel) {
+  var ui = '<select value="' + selectModel.values[selectModel.defaultValueIndex] + '">\n';
+    selectModel.values.forEach(function(val) {
+      ui += '<option value="' + val + '">' + val + "</option>\n";
+    });
+  ui += "</select>";
+  console.log(ui);
+};
+
+generateSelectUI(StudentAgeRange);
 
