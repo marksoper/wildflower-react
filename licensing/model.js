@@ -53,14 +53,33 @@ var DataModel = {
 //
 
 var generateSelectUI = function(selectModel) {
+
+  var getInitialState = function() {
+    return {value: selectModel.values[selectModel.defaultValueIndex]};
+  };
+
+  var handleChange = function(event) {
+    this.setState({value: event.target.value});
+    renderMain();
+  };
+
   var render = function() {
     var options = [];
-    selectModel.values.forEach(function(val) {
-      options.push(React.createElement("option", { value: val}, val));
+    selectModel.values.forEach(function(val, index) {
+      options.push(React.createElement("option", { value: index, key: index}, val));
     });
-    return React.createElement("select", { value: selectModel.values[selectModel.defaultValueIndex] }, options);
+    return React.createElement(
+      "select",
+      { 
+        value: this.state.value,
+        onChange: handleChange
+      },
+      options
+    );
   };
   return React.createClass({
+    getInitialState: getInitialState,
+    handleChange: handleChange.bind(this),
     render: render
   });
 };
@@ -69,11 +88,12 @@ var generateSelectUI = function(selectModel) {
 // Main
 //
 
+var renderMain = function() {
+  React.render(
+    React.createElement(generateSelectUI(StudentAgeRange)),
+    document.getElementById('container')
+  );
+};
 
-React.render(
-  React.createElement(generateSelectUI(StudentAgeRange)),
-  document.getElementById('container')
-);
-
-
+renderMain();
 
