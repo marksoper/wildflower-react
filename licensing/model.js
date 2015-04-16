@@ -1,4 +1,9 @@
 
+
+//
+// Data Model
+//
+
 var User;
 
 var State = {
@@ -43,6 +48,10 @@ var DataModel = {
 };
 
 
+//
+// UI Generators
+//
+
 var generateSelectUI = function(selectModel) {
   var ui = '<select value="' + selectModel.values[selectModel.defaultValueIndex] + '">\n';
     selectModel.values.forEach(function(val) {
@@ -50,7 +59,27 @@ var generateSelectUI = function(selectModel) {
     });
   ui += "</select>";
   console.log(ui);
+  return ui;
 };
 
-generateSelectUI(StudentAgeRange);
+//
+// React
+//
+
+var App = React.createClass({
+  render: function() {
+    var studentAgeRangeSelect = generateSelectUI(StudentAgeRange);
+    return React.DOM.p(null, studentAgeRangeSelect);
+  }
+});
+
+var AppFactory = React.createFactory(App);
+
+setInterval(function() {
+  React.render(
+    AppFactory(),
+    document.getElementById('container')
+  );
+}, 1000);
+
 
