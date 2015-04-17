@@ -49,40 +49,36 @@ var DataModel = {
 
 
 //
-// UI Generators
+// UI
 //
 
-var generateSelectUI = function(selectModel) {
+var StudentAgeRangeSelectComponent = React.createClass({
 
-  var getInitialState = function() {
-    return {value: selectModel.values[selectModel.defaultValueIndex]};
-  };
+  getInitialState: function() {
+    return {value: this.props.initialValue };
+  },
 
-  var handleChange = function(event) {
+  handleChange: function(event) {
     this.setState({value: event.target.value});
     renderMain();
-  };
+  },
 
-  var render = function() {
+  render: function() {
     var options = [];
-    selectModel.values.forEach(function(val, index) {
+    this.props.values.forEach(function(val, index) {
       options.push(React.createElement("option", { value: index, key: index}, val));
     });
     return React.createElement(
       "select",
       { 
         value: this.state.value,
-        onChange: handleChange
+        onChange: this.handleChange
       },
       options
     );
-  };
-  return React.createClass({
-    getInitialState: getInitialState,
-    handleChange: handleChange.bind(this),
-    render: render
-  });
-};
+  }
+
+});
 
 //
 // Main
@@ -90,7 +86,10 @@ var generateSelectUI = function(selectModel) {
 
 var renderMain = function() {
   React.render(
-    React.createElement(generateSelectUI(StudentAgeRange)),
+    React.createElement(StudentAgeRangeSelectComponent, {
+      values: StudentAgeRange.values,
+      initialValue: StudentAgeRange.defaultValueIndex
+    }),
     document.getElementById('container')
   );
 };
