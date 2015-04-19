@@ -59,12 +59,13 @@ var DataModel = {
 var StudentAgeRangeSelectComponent = React.createClass({
 
   getInitialState: function() {
-    return {value: this.props.defaultValue };
+    return { value: this.props.value || this.props.defaultValue };
   },
 
   
   handleChange: function(event) {
     this.setState({value: event.target.value});
+    this.props.changeValue(event.target.value);
   },
   
 
@@ -81,7 +82,7 @@ var StudentAgeRangeSelectComponent = React.createClass({
       { 
         key: "studentAgeSelect",
         id: "studentAgeSelect",
-        value: this.props.value,
+        value: this.state.value,
         onChange: this.handleChange
       },
       options
@@ -214,13 +215,18 @@ var TeacherCredentialCalculatorComponent = React.createClass({
     console.log("onChange in root");
   },
 
+  changeStudentAgeRange: function(newVal) {
+    this.setState({studentAgeRange: newVal});
+  },
+
   render: function() {
     var studentAgeRangeSelectElement = React.createElement(
       StudentAgeRangeSelectComponent,
       {
         key: "studentAgeRangeSelect",
         values: StudentAgeRange.values,
-        value: this.state.studentAgeRange
+        value: this.state.studentAgeRange,
+        changeValue: this.changeStudentAgeRange
       }
     );
     var studentCountSliderElement = React.createElement(
@@ -237,7 +243,7 @@ var TeacherCredentialCalculatorComponent = React.createClass({
       TeacherCredentialRequirementsComponent,
       {
         key: "teacherCredentialRequirements",
-        value: this.state.teachersRequired
+        value: calculateTeachersAndCredentialsFromStudentAgeAndCount(this.state.studentAgeRange, this.state.studentCount)
       }
     );
     return React.createElement(
