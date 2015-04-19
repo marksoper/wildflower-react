@@ -62,13 +62,13 @@ var StudentAgeRangeSelectComponent = React.createClass({
     return { value: this.props.value || this.props.defaultValue };
   },
 
-  
   handleChange: function(event) {
+    if (this.state.value === event.target.value) return;
+    var originalValue = this.state.value;
     this.setState({value: event.target.value});
-    this.props.changeValue(event.target.value);
+    this.props.onChangeValue(event.target.value, originalValue);
   },
   
-
   render: function() {
     var options = [];
     this.props.values.forEach(function(val, index) {
@@ -116,28 +116,16 @@ var StudentAgeRangeSelectComponent = React.createClass({
 var StudentCountSliderComponent = React.createClass({
 
   getInitialState: function() {
-    return { value: this.props.defaultValue };
+    return { value: this.props.value || this.props.defaultValue };
   },
 
-  /*
   handleInput: function(event) {
     if (this.state.value === event.target.value) return;
+    var originalValue = this.state.value;
     console.log("slider handleInput from: " + this.state.value + " to: " + event.target.value);
     this.setState({value: event.target.value});
+    this.props.onChangeValue(event.target.value, originalValue);
   },
-
-  handleChange: function(event) {
-    var origDataValue = this.props.dataValue;
-    if (this.state.value !== event.target.value) {
-      console.log("unexpected");
-      this.setState({value: event.target.value});
-      this.props.dataValue = event.target.value;
-    } else {
-      this.props.dataValue = this.state.value;
-    }
-    console.log("slider handleChange from: " + origDataValue + " to: " + this.props.dataValue);
-  },
-  */
 
   render: function() {
     var input = React.createElement(
@@ -149,8 +137,7 @@ var StudentCountSliderComponent = React.createClass({
         min: this.props.min,
         max: this.props.max,
         step: this.props.step,
-        //onInput: this.handleInput,
-        //onChange: this.handleChange,
+        onInput: this.handleInput,
         value: this.state.value
       }
     );
@@ -192,7 +179,7 @@ var TeacherCredentialRequirementsComponent = React.createClass({
 });
 
 var calculateTeachersAndCredentialsFromStudentAgeAndCount = function(studentAgeRange, studentCount) {
-  return "not implemented, inputs were: " + studentAgeRange + ", " + studentCount;
+  return "Teachers/credentials required for a classroom with " + studentCount + " students of ages " + StudentAgeRange.values[studentAgeRange] + ":";
 };
 
 var TeacherCredentialCalculatorComponent = React.createClass({
@@ -219,6 +206,10 @@ var TeacherCredentialCalculatorComponent = React.createClass({
     this.setState({studentAgeRange: newVal});
   },
 
+  changeStudentCount: function(newVal) {
+    this.setState({studentCount: newVal});
+  },
+
   render: function() {
     var studentAgeRangeSelectElement = React.createElement(
       StudentAgeRangeSelectComponent,
@@ -226,7 +217,7 @@ var TeacherCredentialCalculatorComponent = React.createClass({
         key: "studentAgeRangeSelect",
         values: StudentAgeRange.values,
         value: this.state.studentAgeRange,
-        changeValue: this.changeStudentAgeRange
+        onChangeValue: this.changeStudentAgeRange
       }
     );
     var studentCountSliderElement = React.createElement(
@@ -236,7 +227,8 @@ var TeacherCredentialCalculatorComponent = React.createClass({
         min: NumberOfStudents.min,
         max: NumberOfStudents.max,
         step: NumberOfStudents.step,
-        value: this.state.studentCount
+        value: this.state.studentCount,
+        onChangeValue: this.changeStudentCount
       }
     );
     var teacherCredentialRequirementsElement = React.createElement(
