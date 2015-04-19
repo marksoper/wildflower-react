@@ -36,7 +36,11 @@ var StudentAgeRange = {
 
 var NumberOfStudents = {
   type: "Integer",
-  inputType: "number"
+  inputType: "number",
+  min: 1,
+  max: 40,
+  step: 1,
+  defaultValue: 10
 };
 
 var DataModel = {
@@ -60,36 +64,130 @@ var StudentAgeRangeSelectComponent = React.createClass({
 
   handleChange: function(event) {
     this.setState({value: event.target.value});
-    renderMain();
   },
 
   render: function() {
     var options = [];
     this.props.values.forEach(function(val, index) {
-      options.push(React.createElement("option", { value: index, key: index}, val));
+      options.push(React.createElement("option", {
+        value: index,
+        key: index
+      }, val));
     });
-    return React.createElement(
+    var select = React.createElement(
       "select",
       { 
+        key: "studentAgeSelect",
+        id: "studentAgeSelect",
         value: this.state.value,
         onChange: this.handleChange
       },
       options
     );
+    var label = React.createElement(
+      "div",
+      {
+        key: "studentAgeSelectLabelContainer"
+      },
+      React.createElement(
+        "label",
+        {
+          htmlFor: select.key,
+          key: "studentAgeSelectLabel"
+        },
+        "Student Age"
+      )
+    );
+    return React.createElement(
+      "div",
+      {
+        key: "studentAgeSelectContainer"
+      },
+      [label, select]
+    );
   }
 
 });
+
+
+var StudentCountSliderComponent = React.createClass({
+
+  getInitialState: function() {
+    return {value: this.props.initialValue };
+  },
+
+  handleChange: function(event) {
+    if (this.state.value === event.target.value) return;
+    console.log("slider change from: " + this.state.value + " to: " + event.target.value);
+    this.setState({value: event.target.value});
+  },
+
+  render: function() {
+    var input = React.createElement(
+      "input",
+      {
+        key: "studentCountInput",
+        id: "studentCountInput",
+        type: "range",
+        min: this.props.min,
+        max: this.props.max,
+        step: this.props.step,
+        onInput: this.handleChange,
+        value: this.state.value
+      }
+    );
+
+    var label = React.createElement(
+      "div",
+      {
+        key: "studentCountLabelContainer"
+      },
+      React.createElement(
+        "label",
+        {
+          htmlFor: input.key,
+          key: "studentCountLabel"
+        },
+        "Number of Students"
+      )
+    );
+    return React.createElement(
+      "div",
+      {
+        key: "studentCountSliderContainer"
+      },
+      [label, input]
+    );
+  }
+
+
+});
+
+
 
 //
 // Main
 //
 
 var renderMain = function() {
+  var studentAgeRangeSelectElement = React.createElement(StudentAgeRangeSelectComponent, {
+    values: StudentAgeRange.values,
+    initialValue: StudentAgeRange.defaultValueIndex
+  });
+  var studentCountSliderElement = React.createElement(StudentCountSliderComponent, {
+    initialValue: NumberOfStudents.defaultValue,
+    min: NumberOfStudents.min,
+    max: NumberOfStudents.max,
+    step: NumberOfStudents.step
+  });
   React.render(
-    React.createElement(StudentAgeRangeSelectComponent, {
-      values: StudentAgeRange.values,
-      initialValue: StudentAgeRange.defaultValueIndex
-    }),
+    React.createElement(
+      "div",
+      {
+        key: "licensingInputs"
+      },
+      [studentAgeRangeSelectElement, studentCountSliderElement]
+    ),
     document.getElementById('container')
   );
 };
