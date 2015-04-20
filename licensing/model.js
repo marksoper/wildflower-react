@@ -53,7 +53,7 @@ var DataModel = {
 
 
 //
-// UI
+// Student Age Range Select Component
 //
 
 var StudentAgeRangeSelectComponent = React.createClass({
@@ -113,6 +113,10 @@ var StudentAgeRangeSelectComponent = React.createClass({
 });
 
 
+//
+// Student Count Slider Component
+//
+
 var StudentCountSliderComponent = React.createClass({
 
   getInitialState: function() {
@@ -168,6 +172,10 @@ var StudentCountSliderComponent = React.createClass({
 });
 
 
+//
+// Teacher Credential Requirements Component
+//
+
 var TeacherCredentialRequirementsComponent = React.createClass({
   render: function() {
     return React.createElement(
@@ -177,6 +185,11 @@ var TeacherCredentialRequirementsComponent = React.createClass({
     );
   }
 });
+
+
+//
+// Teacher Credential Calculator Component
+//
 
 var calculateTeachersAndCredentialsFromStudentAgeAndCount = function(studentAgeRange, studentCount) {
   return "Teachers/credentials required for a classroom with " + studentCount + " students of ages " + StudentAgeRange.values[studentAgeRange] + ":";
@@ -243,7 +256,11 @@ var TeacherCredentialCalculatorComponent = React.createClass({
       {
         key: "teacherCredentialCalculatorComponent"
       },
-      [studentAgeRangeSelectElement, studentCountSliderElement, teacherCredentialRequirementsElement]
+      [
+        studentAgeRangeSelectElement,
+        studentCountSliderElement,
+        teacherCredentialRequirementsElement
+      ]
     );
   }
 
@@ -257,7 +274,10 @@ var TeacherCredentialCalculatorComponent = React.createClass({
 var data;
 var renderMain = function() {
   React.render(
-    React.createElement(TeacherCredentialCalculatorComponent),
+    React.createElement("div", null, [
+      React.createElement("h2", null, "Teacher Credentials"),
+      React.createElement(TeacherCredentialCalculatorComponent)
+    ]),
     document.getElementById('container')
   );
 };
